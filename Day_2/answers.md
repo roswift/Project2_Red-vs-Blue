@@ -54,7 +54,10 @@
 4. Find the WebDav connection.
    - Use your dashboard to answer the following questions:
      - How many requests were made to this directory? 
-       > Answer: `33` hits were made: `26` were `http: 207`, `5` were `http: 401`, `2` were `http: 200`. 
+       > Answer: `33` hits were made: 
+       > - `26` were `http: 207` 
+       > - `5` were `http: 401` 
+       > - `2` were `http: 200`
        > 
        > ![webdav_logs](images/webdav_logs.JPG)
        
