@@ -4,13 +4,22 @@
    - Identify the traffic between your machine and the web machine:
      - When did the interaction occur?
        > Answer: The interaction between the `Kali :: 192.168.1.90` machine, and the target `Capstone :: 192.168.1.105` machine began @0130 UTC (1730 PST) and ended @0205 (1805 PST) on February 10<sup>th</sup>, 2022. 
+       > 
+       > ![connections_over_time](images/connections_over_time.JPG)
+       > 
+       
      - What responses did the victim send back?
        > Answer: Various `GET` requests and other `HTTP` responses were sent back.
      - What data is concerning from the Blue Team perspective?
        > Large volumes of http requests from the `agent.name: Kali`
+       > ![kalihits](images/kali2capstone_hits.JPG)
 
 2. Find the request for the hidden directory.
    > Answer: `url.path: "/company_folders/secret_folder/connect_to_corp_server"`
+   > 
+   > ![secret_folder_access](images/secret_folder_access.JPG)
+
+
    - In your attack, you found a secret folder. Let's look at that interaction between these two machines.
      - How many requests were made to this directory? At what time and from which IP address(es)?
        > Answer: `2`
@@ -47,7 +56,7 @@
    - To finish off the attack, you uploaded a PHP reverse shell and started a meterpreter shell session. Answer the following questions:
      - Can you identify traffic from the meterpreter session?
        > Answer: Yes.
-       > ![meterpreter reverseshell](Day_2/images/meterpreter_session.JPG)
+       > ![meterpreter reverseshell](images/meterpreter_session.JPG)
      - What kinds of alarms would you set to detect this behavior in the future?
        > Answer: Again, I would set an alarm that would detect of any access from a device outside of the company infastructure. 
      - Identify at least one way to harden the vulnerable machine that would mitigate this attack.
