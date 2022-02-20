@@ -17,6 +17,7 @@
 - Login to the machine using the credentials: `vagrant:tnargav`
 
 - Switch to the root user with `sudo su`
+> ![sudosu](images/log_in_and_root_switch(1).JPG)
 
 #### Setup Filebeat
 
@@ -24,9 +25,7 @@ Run the following commands:
 - `filebeat modules enable apache`
 - `filebeat setup`
 
-The output should look like this:
-
-![](../../../Images/ELk-Setup/filebeat.png)
+> ![filebeat](images/filebeat_enable(2).JPG)
 
 #### Setup Metricbeat
 
@@ -34,18 +33,14 @@ Run the following commands:
 - `metricbeat modules enable apache`
 - `metricbeat setup`
 
-The output should look like this:
-
-![](../../../Images/ELk-Setup/Metricbeat.png)
+> ![metricbeat](images/metricbeat_enable(3).JPG)
 
 #### Setup Packetbeat
 
 Run the following command:
 - `packetbeat setup`
 
-The output should look like this:
-
-![](../../../Images/ELk-Setup/Packetbeat.png)
+> ![packetbeat](images/packetbeat_enable(4).JPG)
 
 Restart all 3 services. Run the following commands:
 - `systemctl restart filebeat`
@@ -54,7 +49,7 @@ Restart all 3 services. Run the following commands:
 
 These restart commands should not give any output:
 
-![](../../../Images/ELk-Setup/enable.png)
+![service_restart](images/service_restart(5).JPG)
 
 Once all three of these have been enabled, close the terminal window for this machine and proceed with your attack.
 
@@ -86,14 +81,53 @@ Your entire attack will take place using the `Kali Linux` Machine.
 Complete the following to find the flag:
 
 - Discover the IP address of the Linux web server.
+> Command: `ifconfig`
+> 
+> ![capstoneIP](images/capstoneIP(7).JPG)
+> 
+> Command: `nmap -sS -sV 192.168.1.105`
+> 
+> ![nmap_capstone_machine](images/nmap_scan1(9).JPG)
+> 
+> Command: `nmap -sS -A 192.168.1.105`
+> 
+> ![nmap_scan2](images/nmap_scan2.JPG)
+> ![nmap_scan3](images/nmap_scan3.JPG)
+> 
+
+
+
 - Locate the hidden directory on the web server.
-    - **Hint**: Use a browser to see which web pages will load, and/or use a tool like `dirb` to find URLs on the target site.
+> ![dirb_scan](images/dirb_scan.JPG)
+
 - Brute force the password for the hidden directory using the hydra command:
-    - **Hint**: You may need to use `gunzip` to unzip `rockyou.txt.gz` before running Hydra.
-    - **Hint**: `hydra -l <username> -P <wordlist> -s <port> -f -vV <victim.server.ip.address> http-get <path/to/secret/directory>`
+> 
+> Command: `hydra -l ashton -P ~/Downloads/rockyou.txt -s 80 -f -vV 192.168.1.105 http-get /company_folders/secret_folder`
+> ![hydra](images/hydra(20).JPG)
+> After gaining access to the `/secret_folder` using `ashton` & `leopoldo` I was able to view a file which contained the log in information required to access the `WebDav`.
+>
+> ![secret_folder_info](images/secret_folder_connect_to_corp_server.JPG)
+
+
 - Break the hashed password with the Crack Station website or John the Ripper.
+>
+> Ryan's hash: `d7dad0a5cd7c8376eeb50d69b3ccd352`
+> 
+> ![hash_decrypt](images/ryan_hash_decrypt.JPG)
+
+
 - Connect to the server via WebDav.
-    - **Hint**: Look for WebDAV connection instructions in the file located in the secret directory. Note that these instructions may have an old IP Address in them, so you will need to use the IP address you have discovered.
+>
+> After cracking the `md5` hash, I logged into the `WebDav` server using `ryan` & `linux4u`.
+> 
+> ![webdav_login](images/ryan_webdav_login.JPG)
+>
+> Once inside the parent directory, I accessed the file named `passwd.dav` which contained this:
+> ![ryan_password](images/ryan_password.JPG)
+
+
+
+
 - Upload a PHP reverse shell payload.
     - **Hint**: Try using your scripting skills! MSVenom may also be helpful.
 - Execute payload that you uploaded to the site to open up a meterpreter session.
