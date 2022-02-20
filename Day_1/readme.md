@@ -24,37 +24,18 @@ Run the following commands:
 - `filebeat modules enable apache`
 - `filebeat setup`
 
-The output should look like this:
-
-![](../../../Images/ELk-Setup/filebeat.png)
-
 #### Setup Metricbeat
 
 Run the following commands:
 - `metricbeat modules enable apache`
 - `metricbeat setup`
 
-The output should look like this:
-
-![](../../../Images/ELk-Setup/Metricbeat.png)
-
 #### Setup Packetbeat
 
 Run the following command:
 - `packetbeat setup`
 
-The output should look like this:
-
-![](../../../Images/ELk-Setup/Packetbeat.png)
-
-Restart all 3 services. Run the following commands:
-- `systemctl restart filebeat`
-- `systemctl restart metricbeat`
-- `systemctl restart packetbeat`
-
-These restart commands should not give any output:
-
-![](../../../Images/ELk-Setup/enable.png)
+Restart all 3 services.
 
 Once all three of these have been enabled, close the terminal window for this machine and proceed with your attack.
 
@@ -87,15 +68,10 @@ Complete the following to find the flag:
 
 - Discover the IP address of the Linux web server.
 - Locate the hidden directory on the web server.
-    - **Hint**: Use a browser to see which web pages will load, and/or use a tool like `dirb` to find URLs on the target site.
 - Brute force the password for the hidden directory using the hydra command:
-    - **Hint**: You may need to use `gunzip` to unzip `rockyou.txt.gz` before running Hydra.
-    - **Hint**: `hydra -l <username> -P <wordlist> -s <port> -f -vV <victim.server.ip.address> http-get <path/to/secret/directory>`
 - Break the hashed password with the Crack Station website or John the Ripper.
 - Connect to the server via WebDav.
-    - **Hint**: Look for WebDAV connection instructions in the file located in the secret directory. Note that these instructions may have an old IP Address in them, so you will need to use the IP address you have discovered.
 - Upload a PHP reverse shell payload.
-    - **Hint**: Try using your scripting skills! MSVenom may also be helpful.
 - Execute payload that you uploaded to the site to open up a meterpreter session.
 - Find and capture the flag.
 
