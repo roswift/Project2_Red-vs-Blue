@@ -6,7 +6,7 @@
        > Answer: The interaction between the `Kali :: 192.168.1.90` machine, and the target `Capstone :: 192.168.1.105` machine began @0130 UTC (1730 PST) and ended @0205 (1805 PST) on February 10<sup>th</sup>, 2022. 
        > 
        > ![connections_over_time](images/connections_over_time.JPG)
-       > 
+       > ![top_hosts_creating_traffic](images/top_hosts_creating_traffic.JPG)
        
      - What responses did the victim send back?
        > Answer: Various `GET` requests and other `HTTP` responses were sent back.
@@ -22,7 +22,10 @@
 
    - In your attack, you found a secret folder. Let's look at that interaction between these two machines.
      - How many requests were made to this directory? At what time and from which IP address(es)?
-       > Answer: `2`
+       > Answer: `4`
+       > 
+       > ![top10_http_requests](images/top10_http_requests.JPG)
+       
      - Which files were requested? What information did they contain?
        > Answer: The file contained items like `username: ryan`, ryan's hash: `d7dad0a5cd7c8376eeb50d69b3ccd352`: and the login instructions for the server `http://192.168.1.105/webdav/`
      - What kind of alarm would you set to detect this behavior in the future?
@@ -34,11 +37,17 @@
      - Can you identify packets specifically from Hydra?
        > Kibana Search: `source.ip : 192.168.1.90 AND user_agent.original :"Mozilla/4.0 (Hydra)"`
      - How many requests were made in the brute-force attack?
-       > Answer: `15,848`
+       > Answer: `10,140`
+       > 
+       > ![hydra_bruteforce](images/hydra_bruteforce.JPG)
+       
      - How many requests had the attacker made before discovering the correct password in this one?
-       > Answer: `15,846`
+       > Answer: `10,138`
      - What kind of alarm would you set to detect this behavior in the future and at what threshold(s)?
        > Answer: I would set an alarm to trigger after frequent failed loggin attempts. The threshold I would implement for total failed log ins is `5`, however if the evidence shows that there are multiple log ins per millisecond I would also set an alert for that. 
+       > 
+       > ![hydra_permilli](images/hydra_permillisecond.JPG)
+       
      - Identify at least one way to harden the vulnerable machine that would mitigate this attack.
        > Answer: I would scrub the files online to not include valuable information such as: passwords, hashes, usernames, etc. I would also implement a capcha so that brute forces would need to be much more sophisticated rather than just simply using a wordlist. 
 
@@ -46,6 +55,9 @@
    - Use your dashboard to answer the following questions:
      - How many requests were made to this directory? 
        > Answer: `33` hits were made: `26` were `http: 207`, `5` were `http: 401`, `2` were `http: 200`. 
+       > 
+       > ![webdav_logs](images/webdav_logs.JPG)
+       
      - Which file(s) were requested?
        > Answer: A file name `passwd.dav`
      - What kind of alarm would you set to detect such access in the future?
@@ -56,7 +68,10 @@
    - To finish off the attack, you uploaded a PHP reverse shell and started a meterpreter shell session. Answer the following questions:
      - Can you identify traffic from the meterpreter session?
        > Answer: Yes.
+       > 
        > ![meterpreter reverseshell](images/meterpreter_session.JPG)
+
+
      - What kinds of alarms would you set to detect this behavior in the future?
        > Answer: Again, I would set an alarm that would detect of any access from a device outside of the company infastructure. 
      - Identify at least one way to harden the vulnerable machine that would mitigate this attack.
